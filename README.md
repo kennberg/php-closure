@@ -4,12 +4,12 @@ php-closure
 This is an extension of the original library found here: http://code.google.com/p/php-closure/
 
 New features:
-* Compile locally using Google Closure Compiler
-* Support for Google Closure Templates and Soy-To-Js Compiler
+  * Compile locally using Google Closure Compiler
+  * Support for Google Closure Templates and Soy-To-Js Compiler
 
 For the latest Google Closure Compiler and Template files visit:
-* http://closure-compiler.googlecode.com/files/compiler-latest.zip
-* http://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip
+  * http://closure-compiler.googlecode.com/files/compiler-latest.zip
+  * http://closure-templates.googlecode.com/files/closure-templates-for-javascript-latest.zip
 
 How to use
 ======================
