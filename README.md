@@ -24,7 +24,12 @@ whenever a source file, or the script calling the compiler, changes.
 The class will handle the Last-Modified and 304 redirects for you, but if
 you should set Cache-Control headers appropriate for your needs.
 
+Make sure you define LIB\_DIR, then place the jar files and soyutils.js under
+LIB\_DIR/third-party/.
+
 Example usage:
+
+    define('LIB_DIR', getcwd() . 'lib/');
 
     include("php-closure.php");
     $c = new PhpClosure();
