@@ -36,6 +36,8 @@
  *
  * Example usage:
  *
+ * define('LIB_DIR', getcwd() . 'lib/');
+ *
  * include("php-closure.php");
  *
  * $c = new PhpClosure();
@@ -43,7 +45,6 @@
  *   ->add("popup.js")
  *   ->add("popup.soy") // new
  *   ->advancedMode()
- *   ->useClosureLibrary()
  *   ->cacheDir("/tmp/js-cache/")
  *   ->localCompile() // new
  *   ->write();
