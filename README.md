@@ -38,7 +38,6 @@ Example usage:
       ->add("popup.js")
       ->add("popup.soy") // new
       ->advancedMode()
-      ->useClosureLibrary()
       ->cacheDir("/tmp/js-cache/")
       ->localCompile() // new
       ->write();
