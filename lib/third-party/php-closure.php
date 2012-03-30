@@ -7,6 +7,7 @@
  * New features:
  * - Compile locally using Google Closure Compiler
  * - Support for Google Closure Templates and Soy-To-Js Compiler
+ * - Add directories with source files.
  *
  * Original notice:
  * Copyright 2010 Daniel Pupius (http://code.google.com/p/php-closure/)
@@ -42,6 +43,7 @@
  *
  * $c = new PhpClosure();
  * $c->add("my-app.js")
+ *   ->addDir("/js/") // new
  *   ->add("popup.js")
  *   ->add("popup.soy") // new
  *   ->advancedMode()
@@ -72,6 +74,29 @@ class PhpClosure {
    */
   function add($file) {
     $this->_srcs[] = $file;
+    return $this;
+  }
+
+  /**
+   * Search directory for source files and add them automatically.
+   * Not recursive.
+   */
+  function addDir($directory) {
+    $iterator = new DirectoryIterator($directory);
+    foreach ($iterator as $fileinfo) {
+      if (!$fileinfo->isFile())
+        continue;
+
+      // Make sure extension is one of 'js' or 'soy'.
+      $ext = $fileinfo->getFilename();
+      $i = strrpos($ext, '.');
+      if ($i >= 0)
+        $ext = substr($ext, $i + 1);
+      if ($ext != 'js' && $ext != 'soy')
+        continue;
+
+      $this->add($fileinfo->getPathname());
+    }
     return $this;
   }
 

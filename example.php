@@ -6,6 +6,7 @@ include("php-closure.php");
 
 $c = new PhpClosure();
 $c->add("my-app.js")
+  ->addDir("/js/") // new
   ->add("popup.js")
   ->add("popup.soy") // new
   ->advancedMode()

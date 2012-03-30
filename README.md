@@ -7,6 +7,7 @@ New features:
 
   * Compile locally using Google Closure Compiler
   * Support for Google Closure Templates and Soy-To-Js Compiler
+  * Add directories with source files.
 
 For the latest Google Closure Compiler and Template files visit:
 
@@ -35,6 +36,7 @@ Example usage:
 
     $c = new PhpClosure();
     $c->add("my-app.js")
+      ->addDir("/js/") // new
       ->add("popup.js")
       ->add("popup.soy") // new
       ->advancedMode()
