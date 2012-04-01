@@ -39,15 +39,15 @@
  *
  * define('LIB_DIR', getcwd() . 'lib/');
  *
- * include("php-closure.php");
+ * include(LIB_DIR . 'third-party/php-closure.php');
  *
  * $c = new PhpClosure();
- * $c->add("my-app.js")
- *   ->addDir("/js/") // new
- *   ->add("popup.js")
- *   ->add("popup.soy") // new
+ * $c->add('my-app.js')
+ *   ->addDir('/js/') // new
+ *   ->add('popup.js')
+ *   ->add('popup.soy') // new
  *   ->advancedMode()
- *   ->cacheDir("/tmp/js-cache/")
+ *   ->cacheDir('/tmp/js-cache/')
  *   ->localCompile() // new
  *   ->write();
  * 
@@ -85,6 +85,10 @@ class PhpClosure {
     $iterator = new DirectoryIterator($directory);
     foreach ($iterator as $fileinfo) {
       if (!$fileinfo->isFile())
+        continue;
+
+      // Skip backup files that start with "._".
+      if (substr($fileinfo->getFilename(), 0, 2) == '._')
         continue;
 
       // Make sure extension is one of 'js' or 'soy'.
