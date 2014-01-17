@@ -46,6 +46,7 @@
  *   ->addDir('/js/') // new
  *   ->add('popup.js')
  *   ->add('popup.soy') // new
+ *   ->addExternsDir('/js/externs/') // new
  *   ->advancedMode()
  *   ->cacheDir('/tmp/js-cache/')
  *   ->localCompile() // new
@@ -57,6 +58,7 @@
 class PhpClosure {
 
   var $_srcs = array();
+  var $_externs = array();
   var $_mode = "WHITESPACE_ONLY";
   var $_warning_level = "DEFAULT";
   var $_use_closure_library = false;
@@ -100,6 +102,33 @@ class PhpClosure {
         continue;
 
       $this->add($fileinfo->getPathname());
+    }
+    return $this;
+  }
+
+  /**
+   * Search directory for extern files and add them automatically.
+   * Not recursive.
+   */
+  function addExternsDir($directory) {
+    $iterator = new DirectoryIterator($directory);
+    foreach ($iterator as $fileinfo) {
+      if (!$fileinfo->isFile())
+        continue;
+
+      // Skip backup files that start with "._".
+      if (substr($fileinfo->getFilename(), 0, 2) == '._')
+        continue;
+
+      // Make sure extension is 'js'.
+      $ext = $fileinfo->getFilename();
+      $i = strrpos($ext, '.');
+      if ($i >= 0)
+        $ext = substr($ext, $i + 1);
+      if ($ext != 'js')
+        continue;
+
+      $this->_externs[] = $fileinfo->getPathname();
     }
     return $this;
   }
@@ -313,7 +342,7 @@ class PhpClosure {
       $js_cmd .= ' --formatting pretty_print';
 
     $soy_cmd = 'java -jar ' . LIB_DIR . 'third-party/SoyToJsSrcCompiler.jar';
-    $soy_js_filepath = $this->_cache_dir . 'soy.js';
+    $soy_js_filepath = $this->_cache_dir . 'soy-' . md5(uniqid()) . '.js';
     $soy_cmd .= " --outputPathFormat $soy_js_filepath";
     $soy_file_count = 0;
 
@@ -341,6 +370,11 @@ class PhpClosure {
         error_log($stderr);
         return $this->_debug ? false : 'window.console.error(\'Unexpected error\');';
       }
+    }
+
+    // Add externs.
+    foreach ($this->_externs as $src) {
+      $js_cmd .= " --externs $src";
     }
 
     // Run JS compiler.
