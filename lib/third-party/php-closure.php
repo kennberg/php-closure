@@ -67,6 +67,7 @@ class PhpClosure {
   var $_debug = true;
   var $_cache_dir = "";
   var $_code_url_prefix = "";
+  var $_output_wrapper = false;
 
   function PhpClosure() { }
 
@@ -176,6 +177,14 @@ class PhpClosure {
    */
   function useCodeUrl($code_url_prefix) {
     $this->_code_url_prefix = $code_url_prefix;
+    return $this;
+  }
+
+  /**
+   * Tells the compiler to wrap output by default with anonymous function.
+   */
+  function wrapOutput($wrapper = '(function(){%output%})();') {
+    $this->_output_wrapper = $wrapper;
     return $this;
   }
 
@@ -338,8 +347,12 @@ class PhpClosure {
     $js_cmd = 'java -jar ' . LIB_DIR . 'third-party/compiler.jar';
     $js_cmd .= ' --compilation_level ' . $this->_mode;
     $js_cmd .= ' --warning_level ' . $this->_warning_level;
-    if ($this->_pretty_print)
+    if ($this->_pretty_print) {
       $js_cmd .= ' --formatting pretty_print';
+    }
+    if ($this->_output_wrapper) {
+      $js_cmd .= ' --output_wrapper "' . $this->_output_wrapper . '"';
+    }
 
     $soy_cmd = 'java -jar ' . LIB_DIR . 'third-party/SoyToJsSrcCompiler.jar';
     $soy_js_filepath = $this->_cache_dir . 'soy-' . md5(uniqid()) . '.js';
